@@ -6,6 +6,29 @@ from flask import Flask
 app = Flask(__name__)
 
 from threading import Thread
+from Queue import Queue
+
+#####################
+# Console printer
+#####################
+
+class Console(Thread):
+    """Thread safe printing"""
+    def __init__(self):
+        super(Console, self).__init__()
+
+        self.daemon = True
+        self.queue = Queue()
+
+    def write(self, s):
+        """Write the given string to the console"""
+        self.queue.put(s)
+
+    def run(self):
+        while True:
+            s = self.queue.get(True, None)
+            print(s)
+console = Console()
 
 #####################
 # Web front-end
@@ -20,20 +43,21 @@ def index():
 #####################
 
 def periodically_fetch_feeds():
-    print("- Feed fetcher started")
+    console.write("- Feed fetcher started")
 
 #####################
 # Main
 #####################
 
 def main():
+    console.start()
     webserver = Thread(target = app.run)
     webserver.daemon = True
     webserver.start()
     feed_fetcher = Thread(target = periodically_fetch_feeds)
     feed_fetcher.daemon = True
     feed_fetcher.start()
-    print("+ zingr started")
+    console.write("+ zingr started")
 
     # see http://www.regexprn.com/2010/05/killing-multithreaded-python-programs.html
     while True:

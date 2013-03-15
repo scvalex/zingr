@@ -1,4 +1,7 @@
-* TODO Add feeds to DB
 * TODO Show feeds/basic layout
+  :LOGBOOK:
+  CLOCK: [2013-03-15 Fri 00:10]--[2013-03-15 Fri 00:30] =>  0:20
+  :END:
+* TODO Add feeds to DB
 * TODO Import OPML
 * TODO Fetch feeds
