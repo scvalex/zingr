@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-from flask import Flask
+from flask import Flask, send_from_directory
 app = Flask(__name__)
 
 from threading import Thread
@@ -36,7 +36,11 @@ console = Console()
 
 @app.route("/")
 def index():
-    return "Works"
+    return send_from_directory(app.root_path, "index.html")
+
+@app.route("/r/<path:filename>")
+def resource(filename):
+    return send_from_directory("r", filename)
 
 #####################
 # Feeds
