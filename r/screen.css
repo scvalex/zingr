@@ -4,3 +4,17 @@
     padding: 0;
     list-style: none;
 }
+
+#feeds {
+    float: left;
+    background: #f00;
+    width: 30em;
+    min-height: 10em;
+}
+
+#feedContent {
+    float: left;
+    background: #0f0;
+    width: 50em;
+    min-height: 10em;
+}
