@@ -1,0 +1,4 @@
+* TODO Add feeds to DB
+* TODO Show feeds/basic layout
+* TODO Import OPML
+* TODO Fetch feeds
