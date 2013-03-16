@@ -11,8 +11,19 @@
     <script src="/r/zingr.js"></script>
   </head>
   <body>
-    <h1>zingr</h1>
-    <div id="feeds"></div>
+    <header>
+      <h1>zingr</h1>
+    </header>
+    <div id="controls">
+      <form data-bind="submit: addFeedClicked">
+        <input data-bind="value: newFeedUrl, visible: addingFeed" />
+        <button id="addFeedButton" type="submit">Add Feed</button>
+      </form>
+    </div>
+    <ul id="feeds" data-bind="foreach: feeds">
+      <li data-bind="text: title">
+      </li>
+    </ul>
     <div id="feedContent"></div>
   </body>
 </html>
