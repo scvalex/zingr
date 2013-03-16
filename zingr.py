@@ -36,6 +36,9 @@ console = Console()
 # Web front-end
 #####################
 
+def start_server():
+    app.run(debug=True, use_reloader=False)
+
 my_feeds = [{"title": "alex", "url": "alexUrl"},
          {"title": "max", "url": "maxUrl"}]
 
@@ -71,7 +74,7 @@ def periodically_fetch_feeds():
 
 def main():
     console.start()
-    webserver = Thread(target = app.run)
+    webserver = Thread(target = start_server)
     webserver.daemon = True
     webserver.start()
     feed_fetcher = Thread(target = periodically_fetch_feeds)
