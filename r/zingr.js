@@ -4,6 +4,13 @@ function log() {
     }
 }
 
+function requestJson(url, data, onSuccess) {
+    (new Request.JSON({
+            url: url,
+            onSuccess: onSuccess
+    })).get(data);
+}
+
 function AppViewModel() {
     var self = this;
 
@@ -22,16 +29,17 @@ function AppViewModel() {
 
     self.addFeed = function(url) {
         log("Adding feed: ", url);
+        requestJson("/addfeed", {url: url}, function(feeds) {
+            log("Added feed: ", url);
+            self.feeds(feeds);
+        });
     }
 
     self.reload = function() {
-        (new Request.JSON({
-            url: "/feeds",
-            onSuccess: function(feeds) {
-                log("Reloaded feeds: ", feeds);
-                self.feeds(feeds);
-            }
-        })).get();
+        requestJson("/feeds", {}, function(feeds) {
+            log("Reloaded feeds: ", feeds);
+            self.feeds(feeds);
+        });
     }
 }
 

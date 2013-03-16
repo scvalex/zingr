@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, request
 app = Flask(__name__)
 
 from threading import Thread
@@ -36,6 +36,9 @@ console = Console()
 # Web front-end
 #####################
 
+my_feeds = [{"title": "alex", "url": "alexUrl"},
+         {"title": "max", "url": "maxUrl"}]
+
 @app.route("/")
 def index():
     return send_from_directory(app.root_path, "index.html")
@@ -46,8 +49,14 @@ def resource(filename):
 
 @app.route("/feeds")
 def feeds():
-    return json.dumps([{"title": "alex", "url": "alexUrl"},
-                       {"title": "max", "url": "maxUrl"}])
+    return json.dumps(my_feeds)
+
+@app.route("/addfeed")
+def addFeed():
+    url = request.args.get("url")
+    console.write("Adding feed %s" % (url,))
+    my_feeds.append({"title": url, "url": url})
+    return json.dumps(my_feeds)
 
 #####################
 # Feeds
