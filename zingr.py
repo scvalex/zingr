@@ -69,6 +69,7 @@ def addFeed():
         console.write("Adding feed %s" % (url,))
         with sqlite3.connect(DB_NAME) as db:
             db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
+            db.commit()
     return feeds()
 
 #####################
