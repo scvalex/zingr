@@ -8,6 +8,8 @@ app = Flask(__name__)
 from threading import Thread
 from Queue import Queue
 
+import json
+
 #####################
 # Console printer
 #####################
@@ -41,6 +43,11 @@ def index():
 @app.route("/r/<path:filename>")
 def resource(filename):
     return send_from_directory("r", filename)
+
+@app.route("/feeds")
+def feeds():
+    return json.dumps([{"title": "alex", "url": "alexUrl"},
+                       {"title": "max", "url": "maxUrl"}])
 
 #####################
 # Feeds

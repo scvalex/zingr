@@ -19,6 +19,7 @@
         <input data-bind="value: newFeedUrl, visible: addingFeed" />
         <button id="addFeedButton" type="submit">Add Feed</button>
       </form>
+      <button id="reloadButton" data-bind="click: reload">Reload</button>
     </div>
     <ul id="feeds" data-bind="foreach: feeds">
       <li data-bind="text: title">

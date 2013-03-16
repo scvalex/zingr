@@ -4,17 +4,10 @@ function log() {
     }
 }
 
-function Feed(title, url) {
-    var self = this;
-
-    self.title = title;
-    self.url = url;
-}
-
 function AppViewModel() {
     var self = this;
 
-    self.feeds = ko.observable([new Feed("alex", "alexUrl"), new Feed("max", "maxUrl")]);
+    self.feeds = ko.observable([]);
     self.addingFeed = ko.observable(false);
     self.newFeedUrl = ko.observable("");
 
@@ -30,9 +23,21 @@ function AppViewModel() {
     self.addFeed = function(url) {
         log("Adding feed: ", url);
     }
+
+    self.reload = function() {
+        (new Request.JSON({
+            url: "/feeds",
+            onSuccess: function(feeds) {
+                log("Reloaded feeds: ", feeds);
+                self.feeds(feeds);
+            }
+        })).get();
+    }
 }
 
 document.addEvent("domready", function() {
-    ko.applyBindings(new AppViewModel());
+    var model = new AppViewModel();
+    ko.applyBindings(model);
+    model.reload();
     log("document loaded");
 });
