@@ -22,6 +22,7 @@ function AppViewModel() {
         self.addingFeed(!self.addingFeed());
         if (self.addingFeed()) {
             self.newFeedUrl("");
+            $("newFeedInput").focus();
         } else {
             self.addFeed(self.newFeedUrl());
         }

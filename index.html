@@ -16,7 +16,7 @@
     </header>
     <div id="controls">
       <form data-bind="submit: addFeedClicked">
-        <input data-bind="value: newFeedUrl, visible: addingFeed" />
+        <input id="newFeedInput" data-bind="value: newFeedUrl, visible: addingFeed" />
         <button id="addFeedButton" type="submit">Add Feed</button>
       </form>
       <button id="reloadButton" data-bind="click: reload">Reload</button>
