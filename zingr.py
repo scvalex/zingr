@@ -55,14 +55,11 @@ def resource(filename):
 
 @app.route("/feeds")
 def feeds():
-    db = sqlite3.connect(DB_NAME)
     saved_feeds = {}
-    try:
+    with sqlite3.connect(DB_NAME) as db:
         saved_feeds = [{"title": title,
                         "url": url}
                        for title, url in db.execute("SELECT title, url FROM feeds").fetchall()]
-    finally:
-        db.close()
     return json.dumps(saved_feeds)
 
 @app.route("/addfeed")
