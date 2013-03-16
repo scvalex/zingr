@@ -4,6 +4,10 @@
   CLOCK: [2013-03-15 Fri 00:31]--[2013-03-15 Fri 00:52] =>  0:21
   CLOCK: [2013-03-15 Fri 00:10]--[2013-03-15 Fri 00:30] =>  0:20
   :END:
-* TODO Add feeds to DB
+* DONE Add feeds to DB
+  :LOGBOOK:
+  CLOCK: [2013-03-16 Sat 02:21]--[2013-03-16 Sat 02:41] =>  0:20
+  CLOCK: [2013-03-16 Sat 01:58]--[2013-03-16 Sat 02:20] =>  0:22
+  :END:
 * TODO Import OPML
 * TODO Fetch feeds

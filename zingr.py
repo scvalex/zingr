@@ -10,6 +10,12 @@ from Queue import Queue
 
 import json
 
+import sqlite3
+
+import os
+
+DB_NAME = "zingr.db"
+
 #####################
 # Console printer
 #####################
@@ -39,9 +45,6 @@ console = Console()
 def start_server():
     app.run(debug=True, use_reloader=False)
 
-my_feeds = [{"title": "alex", "url": "alexUrl"},
-         {"title": "max", "url": "maxUrl"}]
-
 @app.route("/")
 def index():
     return send_from_directory(app.root_path, "index.html")
@@ -52,14 +55,23 @@ def resource(filename):
 
 @app.route("/feeds")
 def feeds():
-    return json.dumps(my_feeds)
+    db = sqlite3.connect(DB_NAME)
+    saved_feeds = {}
+    try:
+        saved_feeds = [{"title": title,
+                        "url": url}
+                       for title, url in db.execute("SELECT title, url FROM feeds").fetchall()]
+    finally:
+        db.close()
+    return json.dumps(saved_feeds)
 
 @app.route("/addfeed")
 def addFeed():
     url = request.args.get("url")
     console.write("Adding feed %s" % (url,))
-    my_feeds.append({"title": url, "url": url})
-    return json.dumps(my_feeds)
+    with sqlite3.connect(DB_NAME) as db:
+        db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
+    return feeds()
 
 #####################
 # Feeds
@@ -72,7 +84,15 @@ def periodically_fetch_feeds():
 # Main
 #####################
 
+def init_db():
+    if not os.path.exists(DB_NAME):
+        db = sqlite3.connect("zingr.db")
+        db.execute("CREATE TABLE FEEDS ( title TEXT, url TEXT )")
+        db.close()
+
 def main():
+    init_db()
+
     console.start()
     webserver = Thread(target = start_server)
     webserver.daemon = True
