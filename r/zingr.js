@@ -17,6 +17,8 @@ function AppViewModel() {
     self.feeds = ko.observable([]);
     self.addingFeed = ko.observable(false);
     self.newFeedUrl = ko.observable("");
+    self.addingOpml = ko.observable(false);
+    self.opmlPath = ko.observable("");
 
     self.addFeedClicked = function(e) {
         self.addingFeed(!self.addingFeed());
@@ -28,12 +30,26 @@ function AppViewModel() {
         }
     }
 
+    self.addOpmlClicked = function(e) {
+        self.addingOpml(!self.addingOpml());
+        if (self.addingOpml()) {
+            self.opmlPath("");
+            $("opmlInput").focus();
+        } else {
+            self.addOpml(self.opmlPath());
+        }
+    }
+
     self.addFeed = function(url) {
         log("Adding feed: ", url);
         requestJson("/addfeed", {url: url}, function(feeds) {
             log("Added feed: ", url);
             self.feeds(feeds);
         });
+    }
+
+    self.addOpml = function(path) {
+        log("Adding opml: ", path);
     }
 
     self.reload = function() {

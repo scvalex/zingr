@@ -19,6 +19,10 @@
         <input id="newFeedInput" data-bind="value: newFeedUrl, visible: addingFeed" />
         <button id="addFeedButton" type="submit">Add Feed</button>
       </form>
+      <form data-bind="submit: addOpmlClicked">
+        <input id="opmlInput" type="file" data-bind="value: opmlPath, visible: addingOpml" />
+        <button id="addOpmlButton" type="submit">Import OPML</button>
+      </form>
       <button id="reloadButton" data-bind="click: reload">Reload</button>
     </div>
     <ul id="feeds" data-bind="foreach: feeds">
