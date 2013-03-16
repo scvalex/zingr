@@ -29,9 +29,6 @@ function AppViewModel() {
     }
 
     self.addFeed = function(url) {
-        if (url == "") {
-            return;
-        }
         log("Adding feed: ", url);
         requestJson("/addfeed", {url: url}, function(feeds) {
             log("Added feed: ", url);

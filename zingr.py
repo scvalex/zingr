@@ -65,9 +65,10 @@ def feeds():
 @app.route("/addfeed")
 def addFeed():
     url = request.args.get("url")
-    console.write("Adding feed %s" % (url,))
-    with sqlite3.connect(DB_NAME) as db:
-        db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
+    if url:
+        console.write("Adding feed %s" % (url,))
+        with sqlite3.connect(DB_NAME) as db:
+            db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
     return feeds()
 
 #####################
