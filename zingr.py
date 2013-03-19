@@ -62,7 +62,7 @@ def feeds():
                        for title, url in db.execute("SELECT title, url FROM feeds").fetchall()]
     return json.dumps(saved_feeds)
 
-@app.route("/addfeed", methods=["POST"])
+@app.route("/add-feed", methods=["POST"])
 def addFeed():
     url = request.form.get("url")
     if url:
@@ -72,7 +72,7 @@ def addFeed():
             db.commit()
     return feeds()
 
-@app.route("/importopml", methods=["POST"])
+@app.route("/import-opml", methods=["POST"])
 def importOpml():
     return "ok"
 

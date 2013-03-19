@@ -34,7 +34,7 @@ function AppViewModel() {
     self.addFeed = function(url) {
         log("Adding feed: ", url);
         (new Request.JSON({
-            url: "/addfeed",
+            url: "/add-feed",
             onSuccess: function(feeds) {
                 log("Added feed: ", url);
                 self.feeds(feeds);
@@ -46,7 +46,7 @@ function AppViewModel() {
         var f = fs[0];
         log("Adding OPML from file: ", f);
         (new Request({
-            url: "/importopml",
+            url: "/import-opml",
             onSuccess: function(resp) {
                 log("Import OPML done: ", resp);
             }
