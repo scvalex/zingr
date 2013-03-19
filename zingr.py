@@ -64,8 +64,7 @@ def addFeed():
     if url:
         console.write("Adding feed %s" % (url,))
         with sqlite3.connect(DB_NAME) as db:
-            db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
-            db.commit()
+            addFeedToDb(url, db)
     return feeds()
 
 @app.route("/import-opml", methods=["POST"])
@@ -76,10 +75,15 @@ def importOpml():
         feedElements = dom.getElementsByTagName("outline")
         with sqlite3.connect(DB_NAME) as db:
             for fe in feedElements:
-                url = fe.getAttribute("xmlUrl")
-                db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
-            db.commit()
+                addFeedToDb(fe.getAttribute("xmlUrl"), db)
     return feeds()
+
+def addFeedToDb(feedUrl, db):
+    if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
+        console.write("Feed %s already exists" % (feedUrl,))
+    else:
+        db.execute("INSERT INTO feeds VALUES (?, ?)", [feedUrl, feedUrl])
+        db.commit()
 
 #####################
 # Feeds
