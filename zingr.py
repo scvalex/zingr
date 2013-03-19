@@ -7,12 +7,8 @@ app = Flask(__name__)
 
 from threading import Thread
 from Queue import Queue
-
-import json
-
-import sqlite3
-
-import os
+import xml.dom.minidom
+import json, sqlite3, os
 
 DB_NAME = "zingr.db"
 
@@ -76,7 +72,13 @@ def addFeed():
 def importOpml():
     opmlFile = request.files.get("opml-file")
     if opmlFile:
-        print (opmlFile)
+        dom = xml.dom.minidom.parse(opmlFile)
+        feedElements = dom.getElementsByTagName("outline")
+        with sqlite3.connect(DB_NAME) as db:
+            for fe in feedElements:
+                url = fe.getAttribute("xmlUrl")
+                db.execute("INSERT INTO feeds VALUES (?, ?)", [url, url])
+            db.commit()
     return feeds()
 
 #####################
