@@ -72,9 +72,9 @@ def addFeed():
             db.commit()
     return feeds()
 
-@app.route("/importopml")
+@app.route("/importopml", methods=["POST"])
 def importOpml():
-    return ""
+    return "ok"
 
 #####################
 # Feeds

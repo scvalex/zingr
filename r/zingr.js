@@ -18,7 +18,6 @@ function AppViewModel() {
     self.addingFeed = ko.observable(false);
     self.newFeedUrl = ko.observable("");
     self.addingOpml = ko.observable(false);
-    self.opmlPath = ko.observable("");
 
     self.addFeedClicked = function(e) {
         self.addingFeed(!self.addingFeed());
@@ -33,10 +32,9 @@ function AppViewModel() {
     self.addOpmlClicked = function(e) {
         self.addingOpml(!self.addingOpml());
         if (self.addingOpml()) {
-            self.opmlPath("");
             $("opmlInput").focus();
         } else {
-            self.addOpml(self.opmlPath());
+            self.addOpml($("opmlInput").files);
         }
     }
 
@@ -48,8 +46,15 @@ function AppViewModel() {
         });
     }
 
-    self.addOpml = function(path) {
-        log("Adding opml: ", path);
+    self.addOpml = function(fs) {
+        var f = fs[0];
+        log("Adding OPML from file: ", f);
+        (new Request({
+            url: "/importopml",
+            onSuccess: function(resp) {
+                log("Import OPML done: ", resp);
+            }
+        })).send(f);
     }
 
     self.reload = function() {
