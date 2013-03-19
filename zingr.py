@@ -62,9 +62,9 @@ def feeds():
                        for title, url in db.execute("SELECT title, url FROM feeds").fetchall()]
     return json.dumps(saved_feeds)
 
-@app.route("/addfeed")
+@app.route("/addfeed", methods=["POST"])
 def addFeed():
-    url = request.args.get("url")
+    url = request.form.get("url")
     if url:
         console.write("Adding feed %s" % (url,))
         with sqlite3.connect(DB_NAME) as db:

@@ -4,13 +4,6 @@ function log() {
     }
 }
 
-function requestJson(url, data, onSuccess) {
-    (new Request.JSON({
-            url: url,
-            onSuccess: onSuccess
-    })).get(data);
-}
-
 function AppViewModel() {
     var self = this;
 
@@ -40,10 +33,13 @@ function AppViewModel() {
 
     self.addFeed = function(url) {
         log("Adding feed: ", url);
-        requestJson("/addfeed", {url: url}, function(feeds) {
-            log("Added feed: ", url);
-            self.feeds(feeds);
-        });
+        (new Request.JSON({
+            url: "/addfeed",
+            onSuccess: function(feeds) {
+                log("Added feed: ", url);
+                self.feeds(feeds);
+            }
+        })).send("url="+url);
     }
 
     self.addOpml = function(fs) {
@@ -58,10 +54,13 @@ function AppViewModel() {
     }
 
     self.reload = function() {
-        requestJson("/feeds", {}, function(feeds) {
-            log("Reloaded feeds: ", feeds);
-            self.feeds(feeds);
-        });
+        (new Request.JSON({
+            url: "/feeds",
+            onSuccess: function(feeds) {
+                log("Reloaded feeds: ", feeds);
+                self.feeds(feeds);
+            }
+        })).get();
     }
 }
 
