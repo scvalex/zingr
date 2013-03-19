@@ -74,7 +74,10 @@ def addFeed():
 
 @app.route("/import-opml", methods=["POST"])
 def importOpml():
-    return "ok"
+    opmlFile = request.files.get("opml-file")
+    if opmlFile:
+        print (opmlFile)
+    return feeds()
 
 #####################
 # Feeds

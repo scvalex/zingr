@@ -10,7 +10,7 @@ function AppViewModel() {
     self.feeds = ko.observable([]);
     self.addingFeed = ko.observable(false);
     self.newFeedUrl = ko.observable("");
-    self.addingOpml = ko.observable(false);
+    self.importingOpml = ko.observable(false);
 
     self.addFeedClicked = function(e) {
         self.addingFeed(!self.addingFeed());
@@ -22,12 +22,12 @@ function AppViewModel() {
         }
     }
 
-    self.addOpmlClicked = function(e) {
-        self.addingOpml(!self.addingOpml());
-        if (self.addingOpml()) {
+    self.importOpmlClicked = function(e) {
+        self.importingOpml(!self.importingOpml());
+        if (self.importingOpml()) {
             $("opmlInput").focus();
         } else {
-            self.addOpml($("opmlInput").files);
+            self.importOpml($("opmlInput").files);
         }
     }
 
@@ -42,15 +42,19 @@ function AppViewModel() {
         })).send("url="+url);
     }
 
-    self.addOpml = function(fs) {
+    self.importOpml = function(fs) {
         var f = fs[0];
         log("Adding OPML from file: ", f);
-        (new Request({
-            url: "/import-opml",
-            onSuccess: function(resp) {
-                log("Import OPML done: ", resp);
-            }
-        })).send(f);
+        var formData = new FormData();
+        formData.append("opml-file", f);
+        var req = new XMLHttpRequest();
+        req.open("POST", "import-opml");
+        req.onload = function(event) {
+            feeds = JSON.parse(event.target.responseText);
+            log("Got back feeds: ", feeds);
+            self.feeds(feeds);
+        };
+        req.send(formData);
     }
 
     self.reload = function() {
