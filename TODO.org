@@ -14,4 +14,8 @@
   CLOCK: [2013-03-19 Tue 00:40]--[2013-03-19 Tue 02:09] =>  1:29
   CLOCK: [2013-03-16 Sat 20:50]--[2013-03-16 Sat 21:12] =>  0:22
   :END:
-* TODO Fetch feeds
+* DONE Fetch feeds
+  :LOGBOOK:
+  CLOCK: [2013-03-20 Wed 00:47]--[2013-03-20 Wed 02:14] =>  1:27
+  :END:
+* TODO Display feed entries

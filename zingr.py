@@ -8,7 +8,7 @@ app = Flask(__name__)
 from threading import Thread
 from Queue import Queue
 import xml.dom.minidom
-import json, sqlite3, os, urllib2
+import json, sqlite3, os, urllib2, time
 
 DB_NAME = "zingr.db"
 
@@ -90,6 +90,7 @@ def addFeedToDb(feedUrl, db):
 #####################
 
 def fetch_feed(url):
+    """Fetch feed, insert new entries into database."""
     def get_text(nodes):
         rc = []
         for node in nodes:
@@ -110,19 +111,23 @@ def fetch_feed(url):
                     db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?)",
                                [updated, url, title, link, content])
                 except Exception, e:
+                    # We're ignoring entry updates for now.
                     console.write("problem inserting %s into %s" % (link, url))
             db.commit()
     except Exception, e:
         console.write("Error processing feed %s:\n%s" % (url, str(e)))
 
 def fetch_feeds():
+    """Fetch all feeds in database."""
     with sqlite3.connect(DB_NAME) as db:
         for url in (row[0] for row in db.execute("SELECT url FROM feeds").fetchall()):
             fetch_feed(url)
 
 def periodically_fetch_feeds():
     console.write("- Feed fetcher started")
-    fetch_feeds()
+    while True:
+        fetch_feeds()
+        time.sleep(10 * 60)     # sleep for 10min
 
 #####################
 # Main
