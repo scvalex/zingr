@@ -98,33 +98,43 @@ def fetch_feed(url):
 
     try:
         feed = urllib2.urlopen(url)
-        for entry in xml.dom.minidom.parse(feed).getElementsByTagName("entry"):
-            title = get_text(entry.getElementsByTagName("title")[0].childNodes)
-            content = get_text(entry.getElementsByTagName("content")[0].childNodes)
-            link = [l.getAttribute("href")
-                    for l in entry.getElementsByTagName("link")
-                    if l.getAttribute("rel") == "alternate"][0]
-            print(title)
-            print(link)
-            print(content)
+        with sqlite3.connect(DB_NAME) as db:
+            for entry in xml.dom.minidom.parse(feed).getElementsByTagName("entry"):
+                title = get_text(entry.getElementsByTagName("title")[0].childNodes)
+                content = get_text(entry.getElementsByTagName("content")[0].childNodes)
+                link = [l.getAttribute("href")
+                        for l in entry.getElementsByTagName("link")
+                        if l.getAttribute("rel") == "alternate"][0]
+                updated = get_text(entry.getElementsByTagName("updated")[0].childNodes)
+                try:
+                    db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?)",
+                               [updated, url, title, link, content])
+                except Exception, e:
+                    console.write("problem inserting %s into %s" % (link, url))
+            db.commit()
     except Exception, e:
         console.write("Error processing feed %s:\n%s" % (url, str(e)))
 
+def fetch_feeds():
+    with sqlite3.connect(DB_NAME) as db:
+        for url in (row[0] for row in db.execute("SELECT url FROM feeds").fetchall()):
+            fetch_feed(url)
+
 def periodically_fetch_feeds():
     console.write("- Feed fetcher started")
-    with sqlite3.connect(DB_NAME) as db:
-        url = db.execute("SELECT url FROM feeds").fetchall()[0]
-        fetch_feed(url[0])
+    fetch_feeds()
 
 #####################
 # Main
 #####################
 
 def init_db():
+    """Initialise the database, if it does not already exist."""
     if not os.path.exists(DB_NAME):
-        db = sqlite3.connect("zingr.db")
-        db.execute("CREATE TABLE FEEDS ( title TEXT, url TEXT )")
-        db.close()
+        with sqlite3.connect("zingr.db") as db:
+            db.execute("CREATE TABLE feeds ( title TEXT, url TEXT PRIMARY KEY ) ")
+            db.execute("CREATE TABLE entries ( updated TEXT, feed TEXT, title TEXT, url TEXT, content TEXT, CONSTRAINT entries_pkey PRIMARY KEY ( feed, url ) )")
+            db.commit()
 
 def main():
     init_db()
