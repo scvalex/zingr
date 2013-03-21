@@ -18,4 +18,10 @@
   :LOGBOOK:
   CLOCK: [2013-03-20 Wed 00:47]--[2013-03-20 Wed 02:14] =>  1:27
   :END:
-* TODO Display feed entries
+* DONE Display feed entries
+  :LOGBOOK:
+  CLOCK: [2013-03-21 Thu 00:00]--[2013-03-21 Thu 02:49] =>  2:49
+  :END:
+
+* TODO Sort feed entries by date
+* TODO Read/Unread
