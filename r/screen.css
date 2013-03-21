@@ -12,6 +12,10 @@
     min-height: 10em;
 }
 
+#feeds li:hover {
+    background: #0f0;
+}
+
 #feedContent {
     float: left;
     background: #0f0;
