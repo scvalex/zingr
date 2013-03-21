@@ -12,6 +12,15 @@ function Feed(feed) {
     self.selected = ko.observable(false);
 }
 
+function FeedEntry(entry) {
+    var self = this;
+
+    self.updated = entry.updated;
+    self.link = entry.link;
+    self.content = entry.content;
+    self.title = entry.title;
+}
+
 function AppViewModel() {
     var self = this;
 
@@ -20,6 +29,7 @@ function AppViewModel() {
     self.newFeedUrl = ko.observable("");
     self.importingOpml = ko.observable(false);
     self.selectedFeed = ko.observable(null);
+    self.selectedFeedEntries = ko.observable([]);
 
     self.addFeedClicked = function(e) {
         self.addingFeed(!self.addingFeed());
@@ -41,11 +51,9 @@ function AppViewModel() {
     }
 
     self.setFeeds = function(feeds) {
-        var newFeeds = [];
-        Array.each(feeds, function(feed) {
-            newFeeds.push(new Feed(feed));
-        });
-        self.feeds(newFeeds);
+        self.feeds(feeds.map(function(feed) {
+            return (new Feed(feed));
+        }));
     }
 
     self.addFeed = function(url) {
@@ -95,15 +103,18 @@ function AppViewModel() {
         feed.selected(true);
         self.selectedFeed(feed);
 
-        self.showFeedEntries(feed);
+        self.getFeedEntries(feed);
     }
 
-    self.showFeedEntries = function(feed) {
+    self.getFeedEntries = function(feed) {
         (new Request.JSON({
             url: "/feed-entries",
             onSuccess: function(entries) {
                 log("Got entries for ", feed, ": ", entries);
-                $("feedContent").set("text", entries);
+
+                self.selectedFeedEntries(entries.map(function(feed) {
+                    return (new FeedEntry(feed));
+                }));
             }
         })).get({url: feed.url});
     }

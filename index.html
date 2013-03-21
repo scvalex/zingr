@@ -30,9 +30,12 @@
       <li data-bind="text: title, click: $root.selectFeed, css: { selected: selected() }">
       </li>
     </ul>
-    <div id="feedContent">
-      Feed content.
-    </div>
-    </div>
+    <ul id="feedContent" data-bind="foreach: selectedFeedEntries">
+      <li>
+        <h3><a data-bind="attr: { href: link }"><span data-bind="text: title"></span></a></h3>
+        <div data-bind="text: updated"></div>
+        <div data-bind="html: content"></div>
+      </li>
+    </ul>
   </body>
 </html>
