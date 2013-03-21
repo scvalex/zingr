@@ -76,3 +76,18 @@ header h1 {
 .feedEntry .content {
     clear: both;
 }
+
+.feed {
+    white-space: nowrap;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.feed .count {
+    position: absolute;
+    border-radius: 4px;
+    right: 0em;
+    color: #fff;
+    background: #aaa;
+    padding: 0.2em;
+}

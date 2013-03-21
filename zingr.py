@@ -56,6 +56,10 @@ def feeds():
         saved_feeds = [{"title": title,
                         "url": url}
                        for title, url in db.execute("SELECT title, url FROM feeds").fetchall()]
+        for feed in saved_feeds:
+            count = db.execute("SELECT COUNT(*) FROM entries WHERE feed=?",
+                               [feed["url"]]).fetchone()[0]
+            feed["count"] = count
     return json.dumps(saved_feeds)
 
 @app.route("/add-feed", methods=["POST"])

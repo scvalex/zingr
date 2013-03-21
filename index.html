@@ -27,7 +27,9 @@
     </header>
 
     <ul id="feeds" data-bind="foreach: feeds">
-      <li data-bind="text: title, click: $root.selectFeed, css: { selected: selected() }">
+      <li class="feed" data-bind="click: $root.selectFeed, css: { selected: selected() }">
+        <span class="title" data-bind="text: title"></span>
+        <span class="count" data-bind="text: count"></span>
       </li>
     </ul>
     <ul id="feedContent" data-bind="foreach: selectedFeedEntries">

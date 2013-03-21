@@ -9,6 +9,7 @@ function Feed(feed) {
 
     self.title = feed.title;
     self.url = feed.url;
+    self.count = feed.count;
     self.selected = ko.observable(false);
 }
 
