@@ -31,10 +31,10 @@
       </li>
     </ul>
     <ul id="feedContent" data-bind="foreach: selectedFeedEntries">
-      <li>
+      <li class="feedEntry">
         <h3><a data-bind="attr: { href: link }"><span data-bind="text: title"></span></a></h3>
-        <div data-bind="text: updated"></div>
-        <div data-bind="html: content"></div>
+        <div class="date" data-bind="text: updated"></div>
+        <div class="content" data-bind="html: content"></div>
       </li>
     </ul>
   </body>

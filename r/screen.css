@@ -5,6 +5,14 @@
     list-style: none;
 }
 
+a {
+    color: #333;
+}
+
+a:visited {
+   color: #999;
+}
+
 body {
     background: #f0f0f0;
     color: #333;
@@ -48,4 +56,23 @@ header h1 {
     min-height: 10em;
     padding: 0.4em;
     overflow-y: auto;
+}
+
+.feedEntry {
+    margin-bottom: 1em;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1em;
+}
+
+.feedEntry h3 {
+    float: left;
+    margin-bottom: 0.4em;
+}
+
+.feedEntry .date {
+    float: right;
+}
+
+.feedEntry .content {
+    clear: both;
 }
