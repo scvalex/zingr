@@ -35,7 +35,7 @@ header h1 {
 #feeds {
     font-size: 0.8em;
     float: left;
-    width: 26%;
+    width: 16%;
     min-height: 10em;
     padding: 0.4em;
     overflow-y: auto;
@@ -52,7 +52,7 @@ header h1 {
 
 #feedContent {
     float: left;
-    width: 70%;
+    width: 80%;
     min-height: 10em;
     padding: 0.4em;
     overflow-y: auto;

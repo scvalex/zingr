@@ -121,8 +121,11 @@ function AppViewModel() {
 }
 
 function setupLayout() {
-    $("feeds").setStyle("height", document.getSize().y + "px");
-    $("feedContent").setStyle("height", document.getSize().y + "px");
+    var height = document.getSize().y - $$("header")[0].getSize().y - 20;;
+    $("feeds").setStyle("height", height + "px");
+    $("feedContent").setStyle("height", height + "px");
+    var feedContentWidth = document.getSize().x - $("feeds").getSize().x - 28;
+    $("feedContent").setStyle("width", feedContentWidth + "px");
 }
 
 document.addEvent("domready", function() {
