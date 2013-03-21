@@ -5,20 +5,41 @@
     list-style: none;
 }
 
+body {
+    background: #f0f0f0;
+    color: #333;
+    font: lighter 1.3em/1.5 Helvetica, Georgia, serif;
+}
+
+button {
+    font: inherit;
+}
+
+header h1, #controls form, #controls {
+    display: inline;
+}
+
+header h1 {
+    font-size: 3em;
+    margin: 0 1em 0 0.4em;
+}
+
 #feeds {
     float: left;
-    background: #f00;
-    width: 30em;
+    width: 26%;
     min-height: 10em;
+    border-right: 2px solid #555;
+    padding: 0.4em;
 }
 
 #feeds li:hover {
-    background: #0f0;
+    background: #ddd;
+    cursor: pointer;
 }
 
 #feedContent {
     float: left;
-    background: #0f0;
-    width: 50em;
+    width: 70%;
     min-height: 10em;
+    padding: 0.4em;
 }
