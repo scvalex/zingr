@@ -63,8 +63,15 @@ function AppViewModel() {
             onSuccess: function(feeds) {
                 log("Reloaded feeds: ", feeds);
                 self.feeds(feeds);
+                if (feeds.length > 0) {
+                    self.selectFeed(feeds[0]);
+                }
             }
         })).get();
+    }
+
+    self.selectFeed = function(feed) {
+        $("feedContent").set("text", feed.title);
     }
 }
 
