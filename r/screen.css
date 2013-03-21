@@ -25,11 +25,12 @@ header h1 {
 }
 
 #feeds {
+    font-size: 0.8em;
     float: left;
     width: 26%;
     min-height: 10em;
-    border-right: 2px solid #555;
     padding: 0.4em;
+    overflow-y: auto;
 }
 
 #feeds li:hover {
@@ -42,4 +43,5 @@ header h1 {
     width: 70%;
     min-height: 10em;
     padding: 0.4em;
+    overflow-y: auto;
 }

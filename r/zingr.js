@@ -68,7 +68,14 @@ function AppViewModel() {
     }
 }
 
+function setupLayout() {
+    $("feeds").setStyle("height", document.getSize().y + "px");
+    $("feedContent").setStyle("height", document.getSize().y + "px");
+}
+
 document.addEvent("domready", function() {
+    setupLayout();
+
     var model = new AppViewModel();
     ko.applyBindings(model);
     model.reload();
