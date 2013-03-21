@@ -98,22 +98,36 @@ def fetch_feed(url):
         return ''.join(rc)
 
     try:
-        feed = urllib2.urlopen(url)
+        console.write("Fetching feed %s" % (url,))
+        feed = urllib2.urlopen(url, timeout=10)
         with sqlite3.connect(DB_NAME) as db:
-            for entry in xml.dom.minidom.parse(feed).getElementsByTagName("entry"):
+            dom = xml.dom.minidom.parse(feed)
+            feedTitle = get_text(dom.getElementsByTagName("title")[0].childNodes)
+            db.execute("UPDATE feeds SET title=? WHERE url=?", [feedTitle, url])
+            newEntries = 0
+            for entry in dom.getElementsByTagName("entry"):
                 title = get_text(entry.getElementsByTagName("title")[0].childNodes)
                 content = get_text(entry.getElementsByTagName("content")[0].childNodes)
-                link = [l.getAttribute("href")
-                        for l in entry.getElementsByTagName("link")
-                        if l.getAttribute("rel") == "alternate"][0]
+                alternates = [l
+                              for l in entry.getElementsByTagName("link")
+                              if l.getAttribute("rel") == "alternate"]
+                link = "unknown"
+                if len(alternates) > 0:
+                    link = alternates[0].getAttribute("href")
+                else:
+                    link = entry.getElementsByTagName("link")[0].getAttribute("href")
                 updated = get_text(entry.getElementsByTagName("updated")[0].childNodes)
                 try:
                     db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?)",
                                [updated, url, title, link, content])
+                    newEntries += 1
                 except Exception, e:
                     # We're ignoring entry updates for now.
-                    console.write("problem inserting %s into %s" % (link, url))
+                    # console.write("problem inserting %s into %s" % (link, url))
+                    pass
             db.commit()
+            console.write("Inserted %d new entries" % (newEntries,))
+        console.write("Fetched feed %s" % (url,))
     except Exception, e:
         console.write("Error processing feed %s:\n%s" % (url, str(e)))
 

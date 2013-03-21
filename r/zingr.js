@@ -88,7 +88,7 @@ function AppViewModel() {
     }
 
     self.selectFeed = function(feed) {
-        log(feed);
+        log("Select feed ", feed);
         if (self.selectedFeed()) {
             self.selectedFeed().selected(false);
         }
