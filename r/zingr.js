@@ -95,7 +95,17 @@ function AppViewModel() {
         feed.selected(true);
         self.selectedFeed(feed);
 
-        $("feedContent").set("text", feed.title);
+        self.showFeedEntries(feed);
+    }
+
+    self.showFeedEntries = function(feed) {
+        (new Request.JSON({
+            url: "/feed-entries",
+            onSuccess: function(entries) {
+                log("Got entries for ", feed, ": ", entries);
+                $("feedContent").set("text", entries);
+            }
+        })).get({url: feed.url});
     }
 }
 

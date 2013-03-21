@@ -78,6 +78,21 @@ def importOpml():
                 addFeedToDb(fe.getAttribute("xmlUrl"), db)
     return feeds()
 
+@app.route("/feed-entries")
+def feedEntries():
+    feed_url = request.args.get("url")
+    entries = []
+    if feed_url is not None:
+        with sqlite3.connect(DB_NAME) as db:
+            entries = [{"updated": updated,
+                        "title": title,
+                        "link": link,
+                        "content": content}
+                       for (updated, title, link, content)
+                       in db.execute("SELECT updated, title, url, content FROM entries WHERE feed=?",
+                                     [feed_url]).fetchall()]
+    return json.dumps(entries)
+
 def addFeedToDb(feedUrl, db):
     if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
         console.write("Feed %s already exists" % (feedUrl,))
