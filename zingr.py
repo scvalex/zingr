@@ -124,18 +124,29 @@ def fetch_feed(url):
             feedTitle = get_text(dom.getElementsByTagName("title")[0].childNodes)
             db.execute("UPDATE feeds SET title=? WHERE url=?", [feedTitle, url])
             newEntries = 0
-            for entry in dom.getElementsByTagName("entry"):
+            for entry in dom.getElementsByTagName("entry") + dom.getElementsByTagName("item"):
                 title = get_text(entry.getElementsByTagName("title")[0].childNodes)
-                content = get_text(entry.getElementsByTagName("content")[0].childNodes)
-                alternates = [l
-                              for l in entry.getElementsByTagName("link")
-                              if l.getAttribute("rel") == "alternate"]
+                content = "No content"
                 link = "unknown"
-                if len(alternates) > 0:
-                    link = alternates[0].getAttribute("href")
+                updated = "1970-00-00T00:00:00"
+                contentElems = entry.getElementsByTagName("content")
+                if len(contentElems) > 0:
+                    # This looks like RSS
+                    content = get_text(contentElems[0].childNodes)
+                    alternates = [l
+                                  for l in entry.getElementsByTagName("link")
+                                  if l.getAttribute("rel") == "alternate"]
+                    if len(alternates) > 0:
+                        link = alternates[0].getAttribute("href")
+                    else:
+                        link = entry.getElementsByTagName("link")[0].getAttribute("href")
+                    get_text(entry.getElementsByTagName("updated")[0].childNodes)
                 else:
-                    link = entry.getElementsByTagName("link")[0].getAttribute("href")
-                updated = get_text(entry.getElementsByTagName("updated")[0].childNodes)
+                    # This looks like Atom
+                    content = get_text(entry.getElementsByTagName("description")[0].childNodes)
+                    updated = get_text(entry.getElementsByTagName("pubDate")[0].childNodes)
+                    link = get_text(entry.getElementsByTagName("link")[0].childNodes)
+
                 try:
                     db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?)",
                                [updated, url, title, link, content])
