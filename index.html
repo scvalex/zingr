@@ -27,7 +27,7 @@
     </header>
 
     <ul id="feeds" data-bind="foreach: feeds">
-      <li data-bind="text: title, click: $root.selectFeed">
+      <li data-bind="text: title, click: $root.selectFeed, css: { selected: selected() }">
       </li>
     </ul>
     <div id="feedContent">

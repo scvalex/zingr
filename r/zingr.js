@@ -4,6 +4,14 @@ function log() {
     }
 }
 
+function Feed(feed) {
+    var self = this;
+
+    self.title = feed.title;
+    self.url = feed.url;
+    self.selected = ko.observable(false);
+}
+
 function AppViewModel() {
     var self = this;
 
@@ -11,6 +19,7 @@ function AppViewModel() {
     self.addingFeed = ko.observable(false);
     self.newFeedUrl = ko.observable("");
     self.importingOpml = ko.observable(false);
+    self.selectedFeed = ko.observable(null);
 
     self.addFeedClicked = function(e) {
         self.addingFeed(!self.addingFeed());
@@ -31,13 +40,21 @@ function AppViewModel() {
         }
     }
 
+    self.setFeeds = function(feeds) {
+        var newFeeds = [];
+        Array.each(feeds, function(feed) {
+            newFeeds.push(new Feed(feed));
+        });
+        self.feeds(newFeeds);
+    }
+
     self.addFeed = function(url) {
         log("Adding feed: ", url);
         (new Request.JSON({
             url: "/add-feed",
             onSuccess: function(feeds) {
                 log("Added feed: ", url);
-                self.feeds(feeds);
+                self.setFeeds(feeds);
             }
         })).send("url="+url);
     }
@@ -52,7 +69,7 @@ function AppViewModel() {
         req.onload = function(event) {
             feeds = JSON.parse(event.target.responseText);
             log("Got back feeds: ", feeds);
-            self.feeds(feeds);
+            self.setFeeds(feeds);
         };
         req.send(formData);
     }
@@ -62,15 +79,22 @@ function AppViewModel() {
             url: "/feeds",
             onSuccess: function(feeds) {
                 log("Reloaded feeds: ", feeds);
-                self.feeds(feeds);
-                if (feeds.length > 0) {
-                    self.selectFeed(feeds[0]);
+                self.setFeeds(feeds);
+                if (self.feeds().length > 0) {
+                    self.selectFeed(self.feeds()[0]);
                 }
             }
         })).get();
     }
 
     self.selectFeed = function(feed) {
+        log(feed);
+        if (self.selectedFeed()) {
+            self.selectedFeed().selected(false);
+        }
+        feed.selected(true);
+        self.selectedFeed(feed);
+
         $("feedContent").set("text", feed.title);
     }
 }

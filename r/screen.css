@@ -38,6 +38,10 @@ header h1 {
     cursor: pointer;
 }
 
+#feeds li.selected {
+    background: #ccc;
+}
+
 #feedContent {
     float: left;
     width: 70%;
