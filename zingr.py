@@ -6,33 +6,10 @@ from flask import Flask, send_from_directory, request
 app = Flask(__name__)
 
 from threading import Thread
-from Queue import Queue
 import xml.dom.minidom
-import json, sqlite3, os, urllib2, time
+import json, sqlite3, os, urllib2, time, logging
 
 DB_NAME = "zingr.db"
-
-#####################
-# Console printer
-#####################
-
-class Console(Thread):
-    """Thread safe printing"""
-    def __init__(self):
-        super(Console, self).__init__()
-
-        self.daemon = True
-        self.queue = Queue()
-
-    def write(self, s):
-        """Write the given string to the console"""
-        self.queue.put(s)
-
-    def run(self):
-        while True:
-            s = self.queue.get(True, None)
-            print(s)
-console = Console()
 
 #####################
 # Web front-end
@@ -66,7 +43,7 @@ def feeds():
 def addFeed():
     url = request.form.get("url")
     if url:
-        console.write("Adding feed %s" % (url,))
+        app.logger.info("Adding feed %s" % (url,))
         with sqlite3.connect(DB_NAME) as db:
             addFeedToDb(url, db)
     return feeds()
@@ -99,7 +76,7 @@ def feedEntries():
 
 def addFeedToDb(feedUrl, db):
     if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
-        console.write("Feed %s already exists" % (feedUrl,))
+        app.logger.warning("Feed %s already exists" % (feedUrl,))
     else:
         db.execute("INSERT INTO feeds VALUES (?, ?)", [feedUrl, feedUrl])
         db.commit()
@@ -117,7 +94,7 @@ def fetch_feed(url):
         return ''.join(rc)
 
     try:
-        console.write("Fetching feed %s" % (url,))
+        app.logger.info("Fetching feed %s" % (url,))
         feed = urllib2.urlopen(url, timeout=10)
         with sqlite3.connect(DB_NAME) as db:
             dom = xml.dom.minidom.parse(feed)
@@ -153,13 +130,13 @@ def fetch_feed(url):
                     newEntries += 1
                 except Exception, e:
                     # We're ignoring entry updates for now.
-                    # console.write("problem inserting %s into %s" % (link, url))
+                    # app.logger.warning("problem inserting %s into %s" % (link, url))
                     pass
             db.commit()
-            console.write("Inserted %d new entries" % (newEntries,))
-        console.write("Fetched feed %s" % (url,))
+            app.logger.info("Inserted %d new entries" % (newEntries,))
+        app.logger.info("Fetched feed %s" % (url,))
     except Exception, e:
-        console.write("Error processing feed %s:\n%s" % (url, str(e)))
+        app.logger.warning("Error processing feed %s:\n%s" % (url, str(e)))
 
 def fetch_feeds():
     """Fetch all feeds in database."""
@@ -168,7 +145,7 @@ def fetch_feeds():
             fetch_feed(url)
 
 def periodically_fetch_feeds():
-    console.write("- Feed fetcher started")
+    app.logger.info("Feed fetcher started")
     while True:
         fetch_feeds()
         time.sleep(10 * 60)     # sleep for 10min
@@ -188,14 +165,23 @@ def init_db():
 def main():
     init_db()
 
-    console.start()
+    # Setup logging.
+    file_handler = logging.FileHandler("zingr.log")
+    log_format = "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+    file_handler.setFormatter(logging.Formatter(log_format))
+    app.debug_log_format = log_format
+    app.logger.setLevel(logging.INFO)
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.info("zingr starting")
+
     webserver = Thread(target = start_server)
     webserver.daemon = True
     webserver.start()
     feed_fetcher = Thread(target = periodically_fetch_feeds)
     feed_fetcher.daemon = True
     feed_fetcher.start()
-    console.write("+ zingr started")
+    app.logger.info("zingr started")
 
     # see http://www.regexprn.com/2010/05/killing-multithreaded-python-programs.html
     while True:

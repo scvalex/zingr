@@ -23,5 +23,9 @@
   CLOCK: [2013-03-21 Thu 00:00]--[2013-03-21 Thu 02:49] =>  2:49
   :END:
 
+* DONE Better logging
+  :LOGBOOK:
+  CLOCK: [2013-03-24 Sun 19:59]--[2013-03-24 Sun 20:15] =>  0:16
+  :END:
 * TODO Sort feed entries by date
 * TODO Read/Unread
