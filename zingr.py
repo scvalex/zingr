@@ -2,12 +2,12 @@
 
 from __future__ import print_function
 
-from flask import Flask, send_from_directory, request
+from flask import Flask, Response, send_from_directory, request, json
 app = Flask(__name__)
 
 from threading import Thread
 import xml.dom.minidom
-import json, sqlite3, os, urllib2, time, logging
+import sqlite3, os, urllib2, time, logging
 
 DB_NAME = "zingr.db"
 
@@ -37,7 +37,7 @@ def feeds():
             count = db.execute("SELECT COUNT(*) FROM entries WHERE feed=?",
                                [feed["url"]]).fetchone()[0]
             feed["count"] = count
-    return json.dumps(saved_feeds)
+    return Response(json.dumps(saved_feeds), mimetype="application/json")
 
 @app.route("/add-feed", methods=["POST"])
 def addFeed():
@@ -72,7 +72,7 @@ def feedEntries():
                        for (updated, title, link, content)
                        in db.execute("SELECT updated, title, url, content FROM entries WHERE feed=?",
                                      [feed_url]).fetchall()]
-    return json.dumps(entries)
+    return Response(json.dumps(entries), mimetype="application/json")
 
 def addFeedToDb(feedUrl, db):
     if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
