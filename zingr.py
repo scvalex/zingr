@@ -157,7 +157,7 @@ def periodically_fetch_feeds():
 def init_db():
     """Initialise the database, if it does not already exist."""
     if not os.path.exists(DB_NAME):
-        with sqlite3.connect("zingr.db") as db:
+        with sqlite3.connect(DB_NAME) as db:
             db.execute("CREATE TABLE feeds ( title TEXT, url TEXT PRIMARY KEY ) ")
             db.execute("CREATE TABLE entries ( updated TEXT, feed TEXT, title TEXT, url TEXT, content TEXT, CONSTRAINT entries_pkey PRIMARY KEY ( feed, url ) )")
             db.commit()
