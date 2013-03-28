@@ -7,3 +7,4 @@ serve:
 	./zingr.py
 
 clean:
+	rm -f *.db *.log
