@@ -34,7 +34,7 @@ def feeds():
                         "url": url}
                        for title, url in db.execute("SELECT title, url FROM feeds").fetchall()]
         for feed in saved_feeds:
-            count = db.execute("SELECT COUNT(*) FROM entries WHERE feed=?",
+            count = db.execute("SELECT COUNT(*) FROM entries WHERE feed=? AND read=0",
                                [feed["url"]]).fetchone()[0]
             feed["count"] = count
     return Response(json.dumps(saved_feeds), mimetype="application/json")
@@ -125,8 +125,8 @@ def fetch_feed(url):
                     link = get_text(entry.getElementsByTagName("link")[0].childNodes)
 
                 try:
-                    db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?)",
-                               [updated, url, title, link, content])
+                    db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?)",
+                               [updated, url, title, link, content, 0])
                     newEntries += 1
                 except Exception, e:
                     # We're ignoring entry updates for now.
@@ -159,7 +159,7 @@ def init_db():
     if not os.path.exists(DB_NAME):
         with sqlite3.connect(DB_NAME) as db:
             db.execute("CREATE TABLE feeds ( title TEXT, url TEXT PRIMARY KEY ) ")
-            db.execute("CREATE TABLE entries ( updated TEXT, feed TEXT, title TEXT, url TEXT, content TEXT, CONSTRAINT entries_pkey PRIMARY KEY ( feed, url ) )")
+            db.execute("CREATE TABLE entries ( updated TEXT, feed TEXT, title TEXT, url TEXT, content TEXT, read INTEGER, CONSTRAINT entries_pkey PRIMARY KEY ( feed, url ) )")
             db.commit()
 
 def main():
