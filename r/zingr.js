@@ -137,9 +137,10 @@ document.addEvent("domready", function() {
     model.reload();
     log("document loaded");
 
+    var updateInterval = 10000;
     var updater = function () {
         model.reload();
-        this.delay(10000, this);
+        this.delay(updateInterval, this);
     };
-    updater.delay(10000, updater);
+    updater.delay(updateInterval, updater);
 });
