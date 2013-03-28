@@ -136,4 +136,10 @@ document.addEvent("domready", function() {
     ko.applyBindings(model);
     model.reload();
     log("document loaded");
+
+    var updater = function () {
+        model.reload();
+        this.delay(10000, this);
+    };
+    updater.delay(10000, updater);
 });
