@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 from threading import Thread
 import xml.dom.minidom
-import sqlite3, os, urllib2, time, logging
+import sqlite3, os, time, logging, feedparser, datetime
 
 DB_NAME = "zingr.db"
 
@@ -97,43 +97,18 @@ def addFeedToDb(feedUrl, db):
 
 def fetch_feed(url):
     """Fetch feed, insert new entries into database."""
-    def get_text(nodes):
-        rc = []
-        for node in nodes:
-            rc.append(node.data)
-        return ''.join(rc)
-
     try:
         app.logger.info("Fetching feed %s" % (url,))
-        feed = urllib2.urlopen(url, timeout=10)
+        feed = feedparser.parse(url)
         with sqlite3.connect(DB_NAME) as db:
-            dom = xml.dom.minidom.parse(feed)
-            feedTitle = get_text(dom.getElementsByTagName("title")[0].childNodes)
+            feedTitle = feed.feed.title
             db.execute("UPDATE feeds SET title=? WHERE url=?", [feedTitle, url])
             newEntries = 0
-            for entry in dom.getElementsByTagName("entry") + dom.getElementsByTagName("item"):
-                title = get_text(entry.getElementsByTagName("title")[0].childNodes)
-                content = "No content"
-                link = "unknown"
-                updated = "1970-00-00T00:00:00"
-                contentElems = entry.getElementsByTagName("content")
-                if len(contentElems) > 0:
-                    # This looks like RSS
-                    content = get_text(contentElems[0].childNodes)
-                    alternates = [l
-                                  for l in entry.getElementsByTagName("link")
-                                  if l.getAttribute("rel") == "alternate"]
-                    if len(alternates) > 0:
-                        link = alternates[0].getAttribute("href")
-                    else:
-                        link = entry.getElementsByTagName("link")[0].getAttribute("href")
-                    get_text(entry.getElementsByTagName("updated")[0].childNodes)
-                else:
-                    # This looks like Atom
-                    content = get_text(entry.getElementsByTagName("description")[0].childNodes)
-                    updated = get_text(entry.getElementsByTagName("pubDate")[0].childNodes)
-                    link = get_text(entry.getElementsByTagName("link")[0].childNodes)
-
+            for entry in feed.entries:
+                title = entry.title
+                content = entry.description
+                link = entry.link
+                updated = datetime.datetime(*(entry.published_parsed[0:6])).isoformat(" ")
                 try:
                     db.execute("INSERT INTO entries VALUES (?, ?, ?, ?, ?, ?)",
                                [updated, url, title, link, content, 0])
