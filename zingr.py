@@ -74,6 +74,15 @@ def feedEntries():
                                      [feed_url]).fetchall()]
     return Response(json.dumps(entries), mimetype="application/json")
 
+@app.route("/mark-read", methods=["POST"])
+def markRead():
+    feed_url = request.args.get("feed_url")
+    url = request.args.get("url")
+    if feed_url is not None and url is not None:
+        with sqlite3.connect(DB_NAME) as db:
+            db.execute("UPDATE entries SET read=1 WHERE feed=? AND url=?", [feed_url, url])
+    return "ok"
+
 def addFeedToDb(feedUrl, db):
     if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
         app.logger.warning("Feed %s already exists" % (feedUrl,))
