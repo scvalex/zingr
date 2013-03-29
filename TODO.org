@@ -28,4 +28,12 @@
   CLOCK: [2013-03-24 Sun 19:59]--[2013-03-24 Sun 20:15] =>  0:16
   :END:
 * TODO Sort feed entries by date
+  :LOGBOOK:
+  CLOCK: [2013-03-29 Fri 16:17]--[2013-03-29 Fri 16:27] =>  0:10
+  :END:
 * TODO Read/Unread
+  :LOGBOOK:
+  CLOCK: [2013-03-29 Fri 16:12]--[2013-03-29 Fri 16:17] =>  0:05
+  CLOCK: [2013-03-28 Thu 14:35]--[2013-03-28 Thu 14:40] =>  0:05
+  :END:
+

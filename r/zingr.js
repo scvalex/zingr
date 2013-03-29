@@ -89,7 +89,7 @@ function AppViewModel() {
             onSuccess: function(feeds) {
                 log("Reloaded feeds: ", feeds);
                 self.setFeeds(feeds);
-                if (self.feeds().length > 0) {
+                if (self.feeds().length > 0 && !self.selectedFeed()) {
                     self.selectFeed(self.feeds()[0]);
                 }
             }

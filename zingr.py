@@ -72,6 +72,7 @@ def feedEntries():
                        for (updated, title, link, content)
                        in db.execute("SELECT updated, title, url, content FROM entries WHERE feed=?",
                                      [feed_url]).fetchall()]
+    entries = sorted(entries, cmp = lambda a, b: -cmp(a["updated"], b["updated"]))
     return Response(json.dumps(entries), mimetype="application/json")
 
 @app.route("/mark-read", methods=["POST"])
