@@ -119,6 +119,10 @@ function AppViewModel() {
             }
         })).get({url: feed.url});
     }
+
+    self.checkRead = function() {
+        // checking if feed entry is read
+    }
 }
 
 function setupLayout() {
@@ -143,4 +147,8 @@ document.addEvent("domready", function() {
         this.delay(updateInterval, this);
     };
     updater.delay(updateInterval, updater);
+
+    $("feedContent").addEvent("scroll", function() {
+        model.checkRead();
+    });
 });
