@@ -104,6 +104,7 @@ function AppViewModel() {
         }
         feed.selected(true);
         self.selectedFeed(feed);
+        $("feedContent").scrollTo(0);
 
         self.getFeedEntries(feed);
     }
