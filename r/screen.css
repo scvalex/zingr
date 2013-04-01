@@ -75,6 +75,15 @@ header h1 {
 
 .feedEntry .content {
     clear: both;
+    max-width: 40em;
+}
+
+.feedEntry p {
+    margin: 1em 0;
+}
+
+.feedEntry blockquote {
+    margin: 1em 2em;
 }
 
 .feed {

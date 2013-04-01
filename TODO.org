@@ -37,4 +37,7 @@
   CLOCK: [2013-03-29 Fri 16:12]--[2013-03-29 Fri 16:17] =>  0:05
   CLOCK: [2013-03-28 Thu 14:35]--[2013-03-28 Thu 14:40] =>  0:05
   :END:
-* TODO Better CSS for feed contents
+* DONE Better CSS for feed contents
+  :LOGBOOK:
+  CLOCK: [2013-04-02 Tue 00:27]--[2013-04-02 Tue 00:31] =>  0:04
+  :END:
