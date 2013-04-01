@@ -71,7 +71,7 @@ def feedEntries():
                         "content": content,
                         "read": read}
                        for (updated, title, link, content, read)
-                       in db.execute("SELECT updated, title, url, content, read FROM entries WHERE feed=?",
+                       in db.execute("SELECT updated, title, url, content, read FROM entries WHERE feed=? AND read=0",
                                      [feed_url]).fetchall()]
     entries = sorted(entries, cmp = lambda a, b: -cmp(a["updated"], b["updated"]))
     return Response(json.dumps(entries), mimetype="application/json")
