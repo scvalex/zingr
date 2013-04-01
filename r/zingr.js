@@ -126,7 +126,7 @@ function AppViewModel() {
 }
 
 function setupLayout() {
-    var height = document.getSize().y - $$("header")[0].getSize().y - 20;;
+    var height = document.getSize().y - $$("header")[0].getSize().y - 20;
     $("feeds").setStyle("height", height + "px");
     $("feedContent").setStyle("height", height + "px");
     var feedContentWidth = document.getSize().x - $("feeds").getSize().x - 28;
@@ -135,6 +135,7 @@ function setupLayout() {
 
 document.addEvent("domready", function() {
     setupLayout();
+    window.addEvent("resize", setupLayout);
 
     var model = new AppViewModel();
     ko.applyBindings(model);
