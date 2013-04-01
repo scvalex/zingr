@@ -31,9 +31,10 @@
   :LOGBOOK:
   CLOCK: [2013-03-29 Fri 16:17]--[2013-03-29 Fri 16:27] =>  0:10
   :END:
-* TODO Read/Unread
+* DONE Read/Unread
   :LOGBOOK:
+  CLOCK: [2013-04-01 Mon 23:48]--[2013-04-02 Tue 00:21] =>  0:33
   CLOCK: [2013-03-29 Fri 16:12]--[2013-03-29 Fri 16:17] =>  0:05
   CLOCK: [2013-03-28 Thu 14:35]--[2013-03-28 Thu 14:40] =>  0:05
   :END:
-
+* TODO Better CSS for feed contents

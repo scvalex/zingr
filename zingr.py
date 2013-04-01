@@ -68,20 +68,23 @@ def feedEntries():
             entries = [{"updated": updated,
                         "title": title,
                         "link": link,
-                        "content": content}
-                       for (updated, title, link, content)
-                       in db.execute("SELECT updated, title, url, content FROM entries WHERE feed=?",
+                        "content": content,
+                        "read": read}
+                       for (updated, title, link, content, read)
+                       in db.execute("SELECT updated, title, url, content, read FROM entries WHERE feed=?",
                                      [feed_url]).fetchall()]
     entries = sorted(entries, cmp = lambda a, b: -cmp(a["updated"], b["updated"]))
     return Response(json.dumps(entries), mimetype="application/json")
 
 @app.route("/mark-read", methods=["POST"])
 def markRead():
-    feed_url = request.args.get("feed_url")
-    url = request.args.get("url")
+    feed_url = request.form.get("feed_url")
+    url = request.form.get("url")
     if feed_url is not None and url is not None:
+        app.logger.info("Marking as read %s from %s" % (url, feed_url))
         with sqlite3.connect(DB_NAME) as db:
             db.execute("UPDATE entries SET read=1 WHERE feed=? AND url=?", [feed_url, url])
+            db.commit()
     return "ok"
 
 def addFeedToDb(feedUrl, db):

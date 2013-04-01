@@ -20,6 +20,7 @@ function FeedEntry(entry) {
     self.link = entry.link;
     self.content = entry.content;
     self.title = entry.title;
+    self.read = ko.observable(entry.read != 0);
 }
 
 function AppViewModel() {
@@ -120,8 +121,28 @@ function AppViewModel() {
         })).get({url: feed.url});
     }
 
+    self.markRead = function(entry) {
+        log("Marking as read: ", entry.title);
+        (new Request({
+            url: "/mark-read",
+            onSuccess: function() {
+                log("Marked as read: ", entry.title);
+                entry.read(true);
+            }
+        })).send("feed_url="+self.selectedFeed().url+"&url="+entry.link);
+    }
+
     self.checkRead = function() {
-        // checking if feed entry is read
+        var feedContentE = $("feedContent");
+        var feedEntriesE = feedContentE.getElements("li.feedEntry");
+        self.selectedFeedEntries().reduce(function (totalHeight, entry, i) {
+            // If an entry is fully visible, it is read.
+            if (totalHeight < feedContentE.scrollTop + feedContentE.clientHeight
+                && !entry.read()) {
+                self.markRead(entry);
+            }
+            return totalHeight + feedEntriesE[i].getSize().y;
+        }, 0);
     }
 }
 
@@ -137,7 +158,8 @@ document.addEvent("domready", function() {
     setupLayout();
     window.addEvent("resize", setupLayout);
 
-    var model = new AppViewModel();
+    // Model is global.
+    model = new AppViewModel();
     ko.applyBindings(model);
     model.reload();
     log("document loaded");
