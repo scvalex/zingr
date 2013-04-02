@@ -118,6 +118,7 @@ function AppViewModel() {
                 self.selectedFeedEntries(entries.map(function(feed) {
                     return (new FeedEntry(feed));
                 }));
+                self.checkRead();
             }
         })).get({url: feed.url});
     }

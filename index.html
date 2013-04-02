@@ -29,7 +29,7 @@
     <ul id="feeds" data-bind="foreach: feeds">
       <li class="feed" data-bind="click: $root.selectFeed, css: { selected: selected() }">
         <span data-bind="text: title"></span>
-        <span class="count" data-bind="text: count"></span>
+        <span class="count" data-bind="text: count, css: { unread: count > 0 }"></span>
       </li>
     </ul>
     <ul id="feedContent" data-bind="foreach: selectedFeedEntries">

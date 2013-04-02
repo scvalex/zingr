@@ -100,3 +100,7 @@ header h1 {
     background: #aaa;
     padding: 0.2em;
 }
+
+.feed .unread {
+    background: #77f;
+}
