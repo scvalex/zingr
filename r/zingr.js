@@ -13,7 +13,7 @@ function Feed(feed) {
     self.selected = ko.observable(false);
 }
 
-function FeedEntry(entry) {
+function FeedEntry(entry, feed) {
     var self = this;
 
     self.updated = entry.updated;
@@ -21,6 +21,7 @@ function FeedEntry(entry) {
     self.content = entry.content;
     self.title = entry.title;
     self.read = ko.observable(entry.read != 0);
+    self.feed = feed;
 }
 
 function AppViewModel() {
@@ -115,8 +116,8 @@ function AppViewModel() {
             onSuccess: function(entries) {
                 log("Got entries for ", feed, ": ", entries);
 
-                self.selectedFeedEntries(entries.map(function(feed) {
-                    return (new FeedEntry(feed));
+                self.selectedFeedEntries(entries.map(function(entry) {
+                    return (new FeedEntry(entry, feed));
                 }));
                 self.checkRead();
             }
@@ -131,7 +132,7 @@ function AppViewModel() {
                 log("Marked as read: ", entry.title);
                 entry.read(true);
             }
-        })).send("feed_url="+self.selectedFeed().url+"&url="+entry.link);
+        })).send("feed_url="+entry.feed.url+"&url="+entry.link);
     }
 
     self.checkRead = function() {
