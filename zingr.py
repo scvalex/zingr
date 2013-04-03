@@ -7,7 +7,9 @@ app = Flask(__name__)
 
 from threading import Thread
 import xml.dom.minidom
-import sqlite3, os, time, logging, feedparser, datetime
+import sqlite3, os, time, logging, datetime
+
+import feedparser
 
 DB_NAME = "zingr.db"
 
