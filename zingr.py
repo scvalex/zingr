@@ -50,6 +50,7 @@ def addFeedToDb(feedUrl, db):
 
 @app.route("/add-feed", methods=["POST"])
 def addFeed():
+    """Insert feed into database if it is not already present."""
     url = request.form.get("url")
     if url:
         app.logger.info("Adding feed %s" % (url,))
