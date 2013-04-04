@@ -41,6 +41,13 @@ def feeds():
             feed["count"] = count
     return Response(json.dumps(saved_feeds), mimetype="application/json")
 
+def addFeedToDb(feedUrl, db):
+    if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
+        app.logger.warning("Feed %s already exists" % (feedUrl,))
+    else:
+        db.execute("INSERT INTO feeds VALUES (?, ?)", [feedUrl, feedUrl])
+        db.commit()
+
 @app.route("/add-feed", methods=["POST"])
 def addFeed():
     url = request.form.get("url")
@@ -88,13 +95,6 @@ def markRead():
             db.execute("UPDATE entries SET read=1 WHERE feed=? AND url=?", [feed_url, url])
             db.commit()
     return "ok"
-
-def addFeedToDb(feedUrl, db):
-    if db.execute("SELECT * FROM feeds WHERE url = ?", [feedUrl]).fetchone() is not None:
-        app.logger.warning("Feed %s already exists" % (feedUrl,))
-    else:
-        db.execute("INSERT INTO feeds VALUES (?, ?)", [feedUrl, feedUrl])
-        db.commit()
 
 #####################
 # Feeds
