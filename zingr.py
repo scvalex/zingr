@@ -69,9 +69,9 @@ def importOpml():
                 addFeedToDb(fe.getAttribute("xmlUrl"), db)
     return feeds()
 
-@app.route("/feed-entries")
+@app.route("/feed-entries", methods=["POST"])
 def feedEntries():
-    feed_url = request.args.get("url")
+    feed_url = request.form.get("url")
     entries = []
     if feed_url is not None:
         with sqlite3.connect(DB_NAME) as db:

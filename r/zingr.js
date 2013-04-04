@@ -121,7 +121,7 @@ function AppViewModel() {
                 }));
                 self.checkRead();
             }
-        })).get({url: feed.url});
+        })).send("url="+feed.url);
     }
 
     self.markRead = function(entry) {
