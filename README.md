@@ -15,6 +15,8 @@ and of some of the design decisions are in this
 
 [scvalex:23]: http://www.scvalex.net/posts/23/
 
+<img src="zingr.png" alt="Screenshot of Zingr in action">
+
 Dependencies
 ------------
 
