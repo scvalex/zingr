@@ -1,3 +1,21 @@
+#+BEGIN: clocktable :maxlevel 2 :scope file
+Clock summary at [2013-04-05 Fri 13:39]
+
+| Headline                          |   Time |
+|-----------------------------------+--------|
+| *Total time*                      | *9:21* |
+|-----------------------------------+--------|
+| DONE Show feeds/basic layout      |   1:17 |
+| DONE Add feeds to DB              |   0:42 |
+| DONE Import OPML                  |   1:51 |
+| DONE Fetch feeds                  |   1:27 |
+| DONE Display feed entries         |   2:49 |
+| DONE Better logging               |   0:16 |
+| DONE Sort feed entries by date    |   0:10 |
+| DONE Read/Unread                  |   0:45 |
+| DONE Better CSS for feed contents |   0:04 |
+#+END:
+
 * DONE Show feeds/basic layout
   :LOGBOOK:
   CLOCK: [2013-03-16 Sat 01:22]--[2013-03-16 Sat 01:58] =>  0:36
