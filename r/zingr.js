@@ -28,11 +28,15 @@ function AppViewModel() {
     var self = this;
 
     self.feeds = ko.observable([]);
+
+    self.setFeeds = function(feeds) {
+        self.feeds(feeds.map(function(feed) {
+            return (new Feed(feed));
+        }));
+    }
+
     self.addingFeed = ko.observable(false);
     self.newFeedUrl = ko.observable("");
-    self.importingOpml = ko.observable(false);
-    self.selectedFeed = ko.observable(null);
-    self.selectedFeedEntries = ko.observable([]);
 
     self.addFeedClicked = function(e) {
         self.addingFeed(!self.addingFeed());
@@ -44,21 +48,6 @@ function AppViewModel() {
         }
     }
 
-    self.importOpmlClicked = function(e) {
-        self.importingOpml(!self.importingOpml());
-        if (self.importingOpml()) {
-            $("opmlInput").focus();
-        } else {
-            self.importOpml($("opmlInput").files);
-        }
-    }
-
-    self.setFeeds = function(feeds) {
-        self.feeds(feeds.map(function(feed) {
-            return (new Feed(feed));
-        }));
-    }
-
     self.addFeed = function(url) {
         log("Adding feed: ", url);
         (new Request.JSON({
@@ -68,6 +57,17 @@ function AppViewModel() {
                 self.setFeeds(feeds);
             }
         })).send("url="+url);
+    }
+
+    self.importingOpml = ko.observable(false);
+
+    self.importOpmlClicked = function(e) {
+        self.importingOpml(!self.importingOpml());
+        if (self.importingOpml()) {
+            $("opmlInput").focus();
+        } else {
+            self.importOpml($("opmlInput").files);
+        }
     }
 
     self.importOpml = function(fs) {
@@ -98,6 +98,8 @@ function AppViewModel() {
         })).get();
     }
 
+    self.selectedFeed = ko.observable(null);
+
     self.selectFeed = function(feed) {
         log("Select feed ", feed);
         if (self.selectedFeed()) {
@@ -109,6 +111,8 @@ function AppViewModel() {
 
         self.getFeedEntries(feed);
     }
+
+    self.selectedFeedEntries = ko.observable([]);
 
     self.getFeedEntries = function(feed) {
         (new Request.JSON({
