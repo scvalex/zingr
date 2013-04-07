@@ -56,6 +56,7 @@ def addFeed():
         app.logger.info("Adding feed %s" % (url,))
         with sqlite3.connect(DB_NAME) as db:
             addFeedToDb(url, db)
+        fetch_feeds()
     return feeds()
 
 @app.route("/import-opml", methods=["POST"])
@@ -67,6 +68,7 @@ def importOpml():
         with sqlite3.connect(DB_NAME) as db:
             for fe in feedElements:
                 addFeedToDb(fe.getAttribute("xmlUrl"), db)
+        fetch_feeds()
     return feeds()
 
 @app.route("/feed-entries", methods=["POST"])
